@@ -4,10 +4,8 @@ from django.core.files.storage import default_storage as storage
 from datetime import datetime
 from .models import VoucherUploadTask, Voucher, Customer
 from .schema import (
-    CustomerSchema,
     CustomersListSchema,
     VoucherListSchema,
-    VoucherSchema,
 )
 from .tasks import process_csv_file
 from accounts.authenticate import AuthenticationBearer
@@ -28,3 +26,15 @@ def upload_csv(request, file: UploadedFile = File(...)):
     return Munch(
         message="File uploaded", task_id=upload_task.id, celery_task_id=task.id
     )
+
+
+@router.get("/customers", response=CustomersListSchema)
+def list_customers(request):
+    customers = Customer.objects.all()
+    return customers
+
+
+@router.get("/", response=VoucherListSchema)
+def list_vouchers(request):
+    vouchers = Voucher.objects.all()
+    return vouchers

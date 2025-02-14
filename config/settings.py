@@ -10,8 +10,13 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+import os
 from pathlib import Path
+from dotenv import load_dotenv
+import logging
 
+
+load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -20,10 +25,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-#x^=!$l8ba_!s#)egi&7$7*^75h+bgpysy89rk0$_fu8l+$d4g"
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DEBUG")
 
 ALLOWED_HOSTS = []
 
@@ -210,23 +215,23 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "accounts.AccountUser"
-JWT_SECRET_KEY = "dsfjisojdfoisjdfijsdofjodsifjiosdjfisdjfiodsoifj"
-JWT_ACCESS_TTL = 6000
+JWT_SECRET_KEY = os.environ.get("JWT_SECRET_KEY")
+JWT_ACCESS_TTL = os.environ.get("JWT_ACCESS_TTL")
 
 
 # AWS S3 / MINIO CONFIGURATION
 
-AWS_ACCESS_KEY_ID = "YucHdJfkdm9H8rA491ks"
-AWS_SECRET_ACCESS_KEY = "WuFR5JbdnI09CMLv7qc1eGJS9ZLXHdeycEEGBAyO"
-AWS_STORAGE_BUCKET_NAME = "vouchers"
-AWS_S3_ENDPOINT_URL = "http://localhost:8002"
+AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
+AWS_STORAGE_BUCKET_NAME = os.environ.get("AWS_BUCKET_NAME")
+AWS_S3_ENDPOINT_URL = os.environ.get("AWS_S3_ENDPOINT_URL")
 
 
 DEFAULT_FILE_STORAGE = "storages.backends.s3.S3Storage"
 
 
-CELERY_BROKER_URL = "redis://localhost:6379/0"
-CELERY_RESULT_BACKEND = "redis://localhost:6379/0"
-CELERY_ACCEPT_CONTENT = ["json"]
-CELERY_TASK_SERIALIZER = "json"
-CELERY_RESULT_SERIALIZER = "json"
+CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL")
+CELERY_RESULT_BACKEND = os.environ.get("CELERY_RESULT_BACKEND")
+CELERY_ACCEPT_CONTENT = os.environ.get("CELERY_ACCEPT_CONTENT")
+CELERY_TASK_SERIALIZER = os.environ.get("CELERY_TASK_SERIALIZER")
+CELERY_RESULT_SERIALIZER = os.environ.get("CELERY_RESULT_SERIALIZER")
