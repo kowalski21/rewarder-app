@@ -1,6 +1,7 @@
-from ninja import Schema, ModelSchema
+from ninja import Schema, ModelSchema, Field, FilterSchema
 from django.contrib.auth import get_user_model
-from typing import List
+from typing import List, Optional
+
 
 UserModel = get_user_model()
 
@@ -45,3 +46,10 @@ class LoginResponseSchema(Schema):
 
 
 UsersListSchema = List[UserSchema]
+
+
+class UsersFilterSchema(FilterSchema):
+    email: Optional[str] = None
+    is_verified: Optional[bool] = None
+    first_name: Optional[str] = Field(None, q="first_name__icontains")
+    last_name: Optional[str] = Field(None, q="last_name__icontains")

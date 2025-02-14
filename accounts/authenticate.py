@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from ninja.errors import AuthenticationError
+from ninja.security import HttpBearer
 import jwt
 from munch import Munch
 from django.conf import settings
@@ -62,3 +63,10 @@ def verify_jwt_token(
         raise AuthenticationError("Token Expired")
     except jwt.InvalidTokenError:
         raise AuthenticationError("Invalid Token")
+
+
+class AuthenticationBearer(HttpBearer):
+    def authenticate(self, request, token):
+        payload = verify_jwt_token(token, settings.JWT_SECRET_KEY)
+        user = UserModel.objects.get(id=payload["user_id"])
+        return user

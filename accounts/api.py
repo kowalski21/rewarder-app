@@ -1,5 +1,6 @@
-from ninja import Router
+from ninja import Router, Query
 from django.shortcuts import get_object_or_404
+from ninja.pagination import paginate, PageNumberPagination
 from django.contrib.auth import get_user_model, get_user
 from accounts.models import AccountUser
 from .schema import (
@@ -11,8 +12,14 @@ from .schema import (
     PasswordChangedResponseSchema,
     UpdateUserSchema,
     UsersListSchema,
+    UsersFilterSchema,
 )
-from .authenticate import authenticate_user, get_user_from_db, check_user_exists
+from .authenticate import (
+    authenticate_user,
+    get_user_from_db,
+    check_user_exists,
+    AuthenticationBearer,
+)
 from .utils import generate_username
 from ninja.errors import ValidationError, HttpError
 
@@ -35,6 +42,17 @@ def change_user_password(request, payload: ChangePasswordSchema):
         user.save()
         return {"message": "Password changed"}
     raise HttpError(404, "User not found")
+
+
+@router.get("/me", response=UserSchema, auth=AuthenticationBearer())
+def current_user(request):
+    return request.auth
+
+
+@router.get("/{user_id}", response=UserSchema)
+def retrieve_user(request, user_id: int):
+    user = get_object_or_404(UserModel, id=user_id)
+    return user
 
 
 @router.patch("/{user_id}", response=UserSchema)
@@ -66,6 +84,9 @@ def register_user(request, payload: CreateUserSchema):
 
 
 @router.get("/", response=UsersListSchema)
-def list_users(request):
+@paginate(PageNumberPagination)
+def list_users(request, filters: UsersFilterSchema = Query(...)):
     users = UserModel.objects.all()
+    users = filters.filter(users)
+
     return users
