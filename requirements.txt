@@ -1,0 +1,7 @@
+munch
+django
+django-ninja
+python-dotenv
+pyjwt
+pendulum
+celery[all]
