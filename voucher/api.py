@@ -10,24 +10,21 @@ from .schema import (
     VoucherSchema,
 )
 from .tasks import process_csv_file
-from .utils import process_csv
+from accounts.authenticate import AuthenticationBearer
 
-
-router = Router()
+router = Router(auth=AuthenticationBearer())
 
 
 @router.post("/upload-csv")
 def upload_csv(request, file: UploadedFile = File(...)):
-    print(file.name)
+    user = request.auth
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     file_name = f"{timestamp}_{file.name}"
     file_record = storage.save(file_name, file)
     upload_task = VoucherUploadTask.objects.create(
-        csv_file=file_record, original_filename=file.name
+        csv_file=file_record, original_filename=file.name, uploaded_by=user
     )
-    print(upload_task.id)
     task = process_csv_file.delay(upload_task.id, file_name)
-    # pass it to celery task
     return Munch(
         message="File uploaded", task_id=upload_task.id, celery_task_id=task.id
     )

@@ -19,9 +19,11 @@ from django.contrib import admin
 from django.urls import path
 from ninja import NinjaAPI, Redoc
 from accounts.api import router as account_router
+from voucher.api import router as voucher_router
 
 api = NinjaAPI(docs=Redoc())
 api.add_router("/accounts", account_router)
+api.add_router("/voucher", voucher_router)
 
 urlpatterns = [
     path("admin/", admin.site.urls),

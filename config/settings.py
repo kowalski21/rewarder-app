@@ -211,4 +211,22 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "accounts.AccountUser"
 JWT_SECRET_KEY = "dsfjisojdfoisjdfijsdofjodsifjiosdjfisdjfiodsoifj"
-JWT_ACCESS_TTL = 60
+JWT_ACCESS_TTL = 6000
+
+
+# AWS S3 / MINIO CONFIGURATION
+
+AWS_ACCESS_KEY_ID = "YucHdJfkdm9H8rA491ks"
+AWS_SECRET_ACCESS_KEY = "WuFR5JbdnI09CMLv7qc1eGJS9ZLXHdeycEEGBAyO"
+AWS_STORAGE_BUCKET_NAME = "vouchers"
+AWS_S3_ENDPOINT_URL = "http://localhost:8002"
+
+
+DEFAULT_FILE_STORAGE = "storages.backends.s3.S3Storage"
+
+
+CELERY_BROKER_URL = "redis://localhost:6379/0"
+CELERY_RESULT_BACKEND = "redis://localhost:6379/0"
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
