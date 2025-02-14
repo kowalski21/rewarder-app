@@ -17,10 +17,10 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path
-from ninja import NinjaAPI
+from ninja import NinjaAPI, Redoc
 from accounts.api import router as account_router
 
-api = NinjaAPI()
+api = NinjaAPI(docs=Redoc())
 api.add_router("/accounts", account_router)
 
 urlpatterns = [
