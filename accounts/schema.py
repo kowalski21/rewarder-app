@@ -1,6 +1,6 @@
 from ninja import Schema, ModelSchema
 from django.contrib.auth import get_user_model
-
+from typing import List
 
 UserModel = get_user_model()
 
@@ -17,13 +17,6 @@ class CreateUserSchema(Schema):
     last_name: str
 
 
-class UpdateUserSchema(Schema):
-    first_name: str | None
-    last_name: str | None
-    is_verified: bool | None
-    phone_number: str | None
-
-
 class UserSchema(ModelSchema):
     class Meta:
         model = UserModel
@@ -35,6 +28,20 @@ class ChangePasswordSchema(Schema):
     email: str
 
 
+class UpdateUserSchema(Schema):
+    first_name: str | None = None
+    last_name: str | None = None
+    is_verified: bool | None = None
+    phone_number: str | None = None
+
+
+class PasswordChangedResponseSchema(Schema):
+    message: str
+
+
 class LoginResponseSchema(Schema):
     access_token: str
     user_id: int | str
+
+
+UsersListSchema = List[UserSchema]

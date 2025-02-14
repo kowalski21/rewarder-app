@@ -8,6 +8,14 @@ import pendulum
 UserModel = get_user_model()
 
 
+def check_user_exists(email: str) -> UserModel | None:
+    try:
+        user = UserModel.objects.get(email=email)
+        return user
+    except UserModel.DoesNotExist:
+        return None
+
+
 def get_user_from_db(email: str) -> UserModel | None:
     try:
         user = UserModel.objects.get(email=email)
@@ -41,7 +49,7 @@ def authenticate_user(email: str, password: str) -> dict:
         secret_key=settings.JWT_SECRET_KEY,
         expires_in_minutes=settings.JWT_ACCESS_TTL,
     )
-    return Munch(token=token, user_id=user.id)
+    return Munch(access_token=token, user_id=user.id)
 
 
 def verify_jwt_token(
